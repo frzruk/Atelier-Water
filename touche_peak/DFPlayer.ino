@@ -13,7 +13,7 @@ void mp3setup ()
     while(true);
   }
   Serial.println(F("DFPlayer Mini online"));
-
+  myDFPlayer.enableLoop();
   myDFPlayer.volume(30);  // Set the mp3 controller volume
 }
 

@@ -57,16 +57,17 @@ void loop () {
   Serial.print(maxPos, DEC); // Outputs the step on which the maximum frequency occurs
   Serial.print(" ");
   Serial.println(maxVal, DEC); // Outputs the peak of the signal
+  delay(175); // Delay to curb / define the outputs
   
   // Logic to check if the sides of container are being touched
-  if((maxVal < 500) && (maxVal > 200))
+  while((maxVal < 500) && (maxVal > 200))
   {
-  myDFPlayer.play(4);  // Play the 4th file on the TF card in mp3 controller
+  myDFPlayer.loop(4);  // Play the 4th file on the TF card in mp3 controller
   }
   // Logic to check if the container has a finger in the water
-  else if(maxVal < 200)
+  while(maxVal < 200)
   {
-  myDFPlayer.play(5); // Play the 5th file on the TF card in the mp3 controller
+  myDFPlayer.loop(5); // Play the 5th file on the TF card in the mp3 controller
   }
-  delay(200);
+  
 }
