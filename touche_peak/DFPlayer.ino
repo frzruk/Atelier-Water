@@ -1,3 +1,14 @@
+void playFiles(int mV, int mP, int maxValLT, int maxValGT, int maxPosGT, int maxPosLT, int mp3File, int mp3Length)
+{
+  if (((mV < maxValLT) && (mV > maxValGT)) && ((mP > maxPosGT) && (mP < maxPosLT)))
+  {
+    checkVal = false;
+    myDFPlayer.play(mp3File);
+    delay(mp3Length);
+    checkVal = true;
+  }
+}
+
 void mp3setup ()
 {
     mySoftwareSerial.begin(9600); // Start the serial connection to the software on the MP3 Controller
