@@ -16,6 +16,8 @@ DFRobotDFPlayerMini myDFPlayer;
 float values[steps]; // Array of the values along each of the frequencies
 float alpha;
 int maxPos, maxVal; // The maximum position and maximum values
+bool checkVal = true;
+
 
 void setup ()
 {
@@ -40,33 +42,48 @@ void loop () {
   maxVal = 0;
 
   // Start the logic to get the capacitance value along the different frequencies
-  for (int i = 0; i < steps; i++) {
-    TCCR1B &= 0xFE;                       // Turns off timer
-    TCNT1 = 0;                            // Resets timer counter register
-    OCR1A = i;                            // Sets new frequency step
-    TCCR1B |= 0x01;                       // Turns on timer
-    float curVal = analogRead(0); // Reads the current value from the capacitance sensor
-    values[i] = values[i] * alpha + curVal * (1 - alpha);  // exponential moving avg
-    
-    // Find the signal peak
-    if (values[i] > maxVal) {
-      maxVal = values[i];
-      maxPos = i;
+  if (checkVal) {
+    for (int i = 0; i < steps; i++) {
+      TCCR1B &= 0xFE;                       // Turns off timer
+      TCNT1 = 0;                            // Resets timer counter register
+      OCR1A = i;                            // Sets new frequency step
+      TCCR1B |= 0x01;                       // Turns on timer
+      float curVal = analogRead(0); // Reads the current value from the capacitance sensor
+      values[i] = values[i] * alpha + curVal * (1 - alpha);  // exponential moving avg
+
+      // Find the signal peak
+      if (values[i] > maxVal) {
+        maxVal = values[i];
+        maxPos = i;
+      }
     }
+    Serial.print(maxPos, DEC); // Outputs the step on which the maximum frequency occurs
+    Serial.print(" ");
+    Serial.println(maxVal, DEC); // Outputs the peak of the signal
+    delay(175); // Delay to curb / define the outputs
   }
-  Serial.print(maxPos, DEC); // Outputs the step on which the maximum frequency occurs
-  Serial.print(" ");
-  Serial.println(maxVal, DEC); // Outputs the peak of the signal
-  
   // Logic to check if the sides of container are being touched
-  if((maxVal < 500) && (maxVal > 200))
-  {
-  myDFPlayer.play(4);  // Play the 4th file on the TF card in mp3 controller
-  }
-  // Logic to check if the container has a finger in the water
-  else if(maxVal < 200)
-  {
-  myDFPlayer.play(5); // Play the 5th file on the TF card in the mp3 controller
-  }
-  delay(200);
+  /*if(((maxVal < 1024) && (maxVal > 1000)) && ((maxPos > 20) && (maxPos < 40))) // One Finger Touch
+    {
+    checkVal = false; // Set value to be false to stop reading input
+    playFile(1,1000); // Play mp3 file (1) for length of file (1000) in ms
+    checkVal = true; // Re-enable checking of values
+    }*/
+  playFiles(maxVal, maxPos, 300, 200, 25, 120, 1, 500);
+//  playFiles(maxVal, maxPos, 1000, 950, 40, 60, 2, 1000);
+//  playFiles(maxVal, maxPos, 950, 0, 60, 100, 3, 1000);
+  // Logic to check if the container has 3 finger
+  /*else if(((maxVal < 1000) && (maxVal > 950)) && ((maxPos >40) && (maxPos < 60)))
+    {
+    checkVal = false; // Set value to be false to stop reading input
+    playFile(2,1000); // Play mp3 file (2) for length of file (1000) in ms
+    checkVal = true; // Re-enable checking of values
+    }
+    // Logic to check if fingers are dipped in water
+    else if(((maxVal < 1000) && (maxPos > 90)) || (maxPos < 5))
+    {
+    checkVal = false; // Set value to be false to stop reading input
+    playFile(3,1000); // Play mp3 file (3) for length of file (1000) in ms
+    checkVal = true; // Re-enable checking of values
+    }*/
 }
