@@ -69,9 +69,9 @@ void loop () {
     playFile(1,1000); // Play mp3 file (1) for length of file (1000) in ms
     checkVal = true; // Re-enable checking of values
     }*/
-  playFiles(maxVal, maxPos, 1024, 1000, 20, 40, 1, 1000);
-  playFiles(maxVal, maxPos, 1000, 950, 40, 60, 2, 1000);
-  playFiles(maxVal, maxPos, 950, 0, 60, 100, 3, 1000);
+  playFiles(maxVal, maxPos, 300, 200, 25, 120, 1, 500);
+//  playFiles(maxVal, maxPos, 1000, 950, 40, 60, 2, 1000);
+//  playFiles(maxVal, maxPos, 950, 0, 60, 100, 3, 1000);
   // Logic to check if the container has 3 finger
   /*else if(((maxVal < 1000) && (maxVal > 950)) && ((maxPos >40) && (maxPos < 60)))
     {
